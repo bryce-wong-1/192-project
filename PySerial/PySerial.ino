@@ -20,8 +20,8 @@ void loop() {
       lcd.setCursor(3,1);
       lcd.print(counter);
       delay(200);
+      x = Serial.readString().toInt();
+      Serial.print(counter);
     }
   }
-  x = Serial.readString().toInt();
-  Serial.print(x+1);
 }
