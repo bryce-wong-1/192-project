@@ -37,13 +37,13 @@ class AbstractCar:
         self.move()
     def move(self):
         radians = math.radians(self.angle)
-        vertical = math.cos(radians) * self.vel
-        horizontal = math.sin(radians) * self.vel
+        horizontal = math.cos(radians) * self.vel
+        vertical = math.sin(radians) * self.vel
 
         self.y -= vertical
-        self.x -= horizontal
+        self.x += horizontal
     def reduce_speed(self):
-        self.vel = max(self.vel - self.acceleration/2, 0)
+        self.vel = max(self.vel - self.acceleration/5, 0)
         self.move()
 
 
