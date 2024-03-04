@@ -1,8 +1,8 @@
 import pygame
 import time
-import math
+import math, pandas as pd
 from utils import scale_image, blit_rotate_center
-
+import random
 pygame.init()
 GRASS = scale_image(pygame.image.load("grass.webp"),3)
 TRACK = scale_image(pygame.image.load("race-track-square-border.png"), 0.9)
@@ -19,8 +19,8 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Racing Game!")
 
 FPS = 60
-PATH_USER = []
-PATH_COMP = []
+PATH_USER = [(395,0)]
+PATH_COMP = [(395,0)]
 
 class AbstractCar:
     def __init__(self, max_vel, rotation_vel):
@@ -31,6 +31,9 @@ class AbstractCar:
         self.angle = 0
         self.x, self.y = self.START_POS
         self.acceleration = 0.1
+        self.start_time = None
+        self.distance_traveled = 0
+        self.finished = False
 
     def rotate(self, left=False, right=False):
         if left:
@@ -50,12 +53,21 @@ class AbstractCar:
         self.move()
 
     def move(self):
+        old_x, old_y = self.x, self.y
+
+        if not self.finished:
+            if self.start_time is None:
+                self.start_time = time.time()
+            old_x, old_y = self.x, self.y
+
         radians = math.radians(self.angle)
         vertical = math.cos(radians) * self.vel
         horizontal = math.sin(radians) * self.vel
 
         self.y -= vertical
         self.x -= horizontal
+
+        self.distance_traveled += math.hypot(self.x - old_x, self.y - old_y)
 
     def collide(self, mask, x=0, y=0):
         car_mask = pygame.mask.from_surface(self.img)
@@ -71,7 +83,7 @@ class AbstractCar:
 
 
 class PlayerCar(AbstractCar):
-    IMG = RED_CAR
+    IMG = GREEN_CAR
     START_POS = (365, 310)
 
     def reduce_speed(self):
@@ -84,11 +96,12 @@ class PlayerCar(AbstractCar):
 
 
 class ComputerCar(AbstractCar):
-    def __init__(self,image, START_POS, max_vel, rotation_vel, path=[]):
+    def __init__(self,image, max_vel, rotation_vel, path=[], start_pos=(0, 0)):
         self.IMG = image
-        self.x, self.y = START_POS
+        self.START_POS = start_pos
         super().__init__(max_vel, rotation_vel)
         self.path = path
+        self.x, self.y = self.START_POS
         self.current_point = 0
         self.vel = max_vel
 
@@ -138,12 +151,14 @@ class ComputerCar(AbstractCar):
         super().move()
 
 
-def draw(win, images, player_car, computer_car):
+def draw(win, images, player_car, computer_car,othercars = []):
     for img, pos in images:
         win.blit(img, pos)
 
     player_car.draw(win)
     computer_car.draw(win)
+    for i in range(len(othercars)):
+        othercars[i].draw(win)
     pygame.display.update()
 
 
@@ -182,17 +197,62 @@ def handle_collision(player_car, computer_car):
             player_car.reset()
             computer_car.reset()
 
+def handle_finish(car):
+    if not car.finished:
+        finish_time = time.time()
+        elapsed_time = finish_time - car.start_time
+        car.finished = True
+        
+        # Construct the file path
+        file_path = 'track data.xlsx'
 
+        # Define the sheet name where you want to append the data
+        sheet_name = 'Sheet4'
+
+        # Create a DataFrame for the new data, now including Rotational Speed
+        new_data = pd.DataFrame({
+            'Distance': [car.distance_traveled],
+            'Time': [elapsed_time],
+            'Finish Time': [finish_time],
+            "Start Time": [car.start_time],
+            'Unit Velocity': [car.distance_traveled/elapsed_time],
+            'Max Velocity': [car.max_vel],
+            "Rotation Velocity": [car.rotation_vel]
+        })
+
+        # Use a context manager to handle reading and writing to Excel file
+        with pd.ExcelWriter(file_path, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
+            # Try to read the existing data (if any) from the specified sheet
+            try:
+                existing_data = pd.read_excel(file_path, sheet_name=sheet_name)
+                updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+            except FileNotFoundError:
+                updated_data = new_data
+            except ValueError:  # If the sheet does not exist, write new data
+                updated_data = new_data
+
+            # Save the updated data back to the Excel file in the specified sheet
+            updated_data.to_excel(writer, sheet_name=sheet_name, index=False)
+
+e,f = 5,8
+c = [random.uniform(e,f),random.uniform(e,f),random.uniform(e,f),random.uniform(e,f),random.uniform(e,f),random.uniform(e,f),random.uniform(e,f)]
+a,b = [0.85, 1.15]
 run = True
 clock = pygame.time.Clock()
-images = [(GRASS,(0,0)),(FINISH, FINISH_POSITION),(TRACK, (0, 0))]
-player_car = ComputerCar(RED_CAR,(365, 310),0, 5)
-computer_car = ComputerCar(GREEN_CAR,(395, 310),0, 5, PATH_COMP)
+images = [(GRASS,(0,0)),(TRACK, (0, 0)),(FINISH, FINISH_POSITION)]
+player_car = ComputerCar(GREEN_CAR, 6, 6,PATH_USER,(395, 530))
+computer_car = ComputerCar(GREEN_CAR,c[0], c[0], PATH_COMP,(395, 530))
+othercar1 = ComputerCar(GREEN_CAR,c[1], c[1], PATH_COMP,(395, 530))
+othercar2 = ComputerCar(GREEN_CAR,c[2], c[2], PATH_COMP,(395, 530))
+othercar3 = ComputerCar(GREEN_CAR,c[3], c[3], PATH_COMP,(395, 530))
+othercar4 = ComputerCar(GREEN_CAR,c[4], c[4], PATH_COMP,(395, 530))
+othercar5 = ComputerCar(GREEN_CAR,c[5], c[5], PATH_COMP,(395, 530))
+othercars = [othercar1,othercar2,othercar3,othercar4,othercar5]
 
 while run:
     clock.tick(FPS)
 
-    draw(WIN, images, player_car, computer_car)
+    draw(WIN, images, player_car, computer_car,othercars)
     pygame.display.update()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -200,12 +260,19 @@ while run:
             break
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
-            computer_car.path.append(pos)
+            player_car.path.append(pos)
 
-    player_car.move()
-    computer_car.move()
+    for i in range(len(othercars)):
+        othercars[i].move()
 
+
+    for i in range(len(othercars)):
+        if othercars[i].collide(FINISH_MASK, *FINISH_POSITION) and not othercars[i].finished:
+            handle_finish(othercars[i])
+
+
+    
     #handle_collision(player_car, computer_car)
 
-print(computer_car.path)
+print(player_car.path)
 pygame.quit()
