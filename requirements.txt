@@ -34,10 +34,6 @@ h
 idna
 importlib-metadata
 installer
-iso
-itsdangerous
-jaracoclasses
-Jinja
 jsonschema
 jsonschema-specifications
 keyring
@@ -86,7 +82,6 @@ smmap
 SQLAlchemy
 streamlit
 streamlit-folium
-
 Werkzeug
 wsproto
 XlsxWriter
