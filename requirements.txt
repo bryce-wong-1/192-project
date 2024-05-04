@@ -30,7 +30,6 @@ future
 gitdb
 GitPython
 greenlet
-h
 idna
 importlib-metadata
 installer
@@ -45,9 +44,6 @@ matplotlib
 mdurl
 more-itertools
 msgpack
-mysql
-mysql-connector-python
-mysqlclient
 numpy
 openpyxl
 packaging
