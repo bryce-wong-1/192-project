@@ -31,7 +31,7 @@ st.dataframe(df.reset_index())  # Display DataFrame without index
 # Create a Plotly Express line chart
 fig = px.line(df.reset_index(), x='Seconds', y='Voltage', title='Voltage Over Time')
 
-choice = ['Voltage Scatter Chart', 'Voltage Line Chart', 'Voltage Area Chart']
+choice = ['Voltage Line Chart', 'Voltage Scatter Chart', 'Voltage Area Chart']
 select = st.selectbox("Choose a chart",choice)
 match select:
     case 'Voltage Line Chart':
@@ -41,5 +41,5 @@ match select:
     case 'Voltage Area Chart':
         st.area_chart(df)
     case _:
-        st.scatter_chart(df)
+        st.plotly_chart(fig)
 
