@@ -51,7 +51,7 @@ more-itertools
 msgpack
 mysql
 mysql-connector-python
-mysqlclient @ file:///C:/Users/BRYCE/Documents/Work/mysqlclient--cp-cp-win_amdwhl#shaeebefddcbcfdbfecaccbcaacdeecebab
+mysqlclient
 numpy
 openpyxl
 packaging
