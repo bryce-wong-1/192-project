@@ -48,9 +48,9 @@ with tab2:
     df = set_tabs('Current')
     graphs('Current', df)
     
-#with tab3:
- #   df = set_tabs('Power')
-  #  graphs('Power', df)
+with tab3:
+    df = set_tabs('Power')
+    graphs('Power', df)
 with tab4:
     with st.container(border=True):
         st.markdown(
