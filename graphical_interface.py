@@ -35,7 +35,7 @@ def graphs(tab, df):
             case _:
                 st.plotly_chart(fig)
 st.title("Vehicle Efficiency Insight Tool")        
-tab1, tab2, tab3, tab4 = st.tabs(['Voltage', 'Current', 'Power', 'Other Documents'])
+tab1, tab2, tab3, tab4 = st.tabs(['Voltage', 'Current', 'Power', 'References'])
 # Streamlit user interface
 
 
@@ -58,8 +58,8 @@ with tab4:
             Assumptions: 
             
             - Calculations are based on a Postal Vehicle 
-            - Efficiency of system is ~ 2750 rpm (DC Motor) / 3000 rpm (Flywheel angular velocity needed to accelerate) = 91.6% 
-            - Startup factor is assumed to lower gas mileage by ~10% - 40% 
+            - Efficiency of system is ~ 2750 rpm (DC Motor) / 3000 rpm (Flywheel angular velocity needed to accelerate to 25-40 mph) = 91.6% 
+            - Startup factor is assumed to lower gas mileage by ~10%\ - 40% 
             - Assume vehicle must travel 5 feet to confidently overcome inertia 
             - Postal vehicles get ~ 8.2 - 8.6 MPG (https://www.reuters.com/business/sustainable-business/white-house-epa-urge-us-postal-service-conduct-new-review-vehicle-plan-2022-02-02/) 
             - All postal service vehicles made 12.7 million stops in 2016 (https://facts.usps.com/size-and-scope/) 
@@ -88,7 +88,8 @@ with tab4:
             )
 
         st.image('Calculations.png', caption='Calculations')
-
+    with st.container(border=True):
+        st.image("HandDrawing.png", caption = "Hand drawing of circuit")
         st.markdown('''
             <style>
             [data-testid="stMarkdownContainer"] ul{
