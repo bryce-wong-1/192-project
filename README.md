@@ -1,6 +1,3 @@
-# 192-project
----
-
 # Drive in the City
 
 **Drive in the City** is a simulation game that utilizes Pygame to allow players to drive a virtual car around a city track. The game focuses on navigating a predefined path without colliding with the track borders, managing speed, and monitoring fuel efficiency improvements.
