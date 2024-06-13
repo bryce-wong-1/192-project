@@ -1,6 +1,4 @@
 # 192-project
-Here's a README file that explains how to play your game "Drive in the City":
-
 ---
 
 # Drive in the City
@@ -23,11 +21,11 @@ To run **Drive in the City**, you need Python and Pygame installed on your compu
 3. **Download the Game:**
    Download the source code from the repository or clone it using git:
    ```
-   git clone <repository-url>
+   git clone https://github.com/bryce-wong-1/192-project
    ```
 
 4. **Run the Game:**
-   Navigate to the game directory and run the main script:
+   Navigate to the main folder and run the main script:
    ```
    python main.py
    ```
@@ -69,6 +67,3 @@ The main objective of the game is to navigate the city track as efficiently as p
 
 Enjoy your drive through the city!
 
----
-
-This README provides a concise yet comprehensive guide to installing, understanding, and playing "Drive in the City". Adjust the repository URL and any other specific instructions as necessary to match your actual game setup and repository details.
